@@ -10,9 +10,8 @@ module.exports = {
                 use: ['babel-loader?cacheDirectory']
             },
             {
-                test: /\.scss$/,
-                use: ['style-loader', 'css-loader', 'sass-loader'],
-                exclude: paths.nodeModules
+                test: /\.less$/,
+                use: ['style-loader', 'css-loader', 'less-loader'],
             },
             {
                 test: /\.css$/,
@@ -35,7 +34,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: '画啦啦',
+            title: 'my components',
             filename: 'index.html',
             template: paths.template
         })

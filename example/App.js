@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
-import Com from '../src/index'
-import './App.scss'
+import { Button } from '../dist/index';
+import '../dist/index.css';
+import './App.less'
 
 class App extends Component {
 
     constructor(props) {
         super(props)
-        this.state = {
-            data: 666
-        }
     }
     render() {
         return (
             <div className="App">
-                <Com/>        
+                <Button></Button>   
             </div>
         )
     }

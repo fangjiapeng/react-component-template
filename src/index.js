@@ -1,22 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './normalize.css'
-import './index.scss'
+import Button from './button';
+import Link from './link';
 
-
-class Com extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            data: 666
-        }
-    }
-
-    render() {
-        return (
-            <div className="component">
-                {this.state.data}
-            </div>
-        )
-    }
+export {
+    Button,
+    Link
 }
-export default Com
