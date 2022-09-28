@@ -1,12 +1,12 @@
 {
     "plugins": [
         [
-            "@babel/transform-runtime",
+            "import",
             {
-                "polifill": false
+                "libraryName": "antd",
+                "style": true
             }
-        ],
-        "@babel/plugin-transform-react-jsx"
+        ]
     ],
     "presets": [
         [

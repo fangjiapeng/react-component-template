@@ -1,31 +1,32 @@
 const { rollup } = require('rollup');
 
-const commonjs = require('rollup-plugin-commonjs');// 把node_modules中的commonjs模块转换为es模块
-const resolve = require('rollup-plugin-node-resolve'); // 需要打包node_modules中的包
+const commonjs = require('@rollup/plugin-commonjs');// 把node_modules中的commonjs模块转换为es模块
+const { nodeResolve } = require('@rollup/plugin-node-resolve'); // 需要打包node_modules中的包
 const babel = require('rollup-plugin-babel'); // 处理jsx
 const { terser } = require("rollup-plugin-terser");
 const json = require('rollup-plugin-json');
 const styles = require('rollup-plugin-styles');
 const postcss = require('rollup-plugin-postcss');
-// const cssUrl = require('postcss-url'); // 内联样式
 const extensions = [
     '.js', '.jsx', '.ts', '.tsx',
 ];
 
-function createInput(name, entry) {
+function createInput(entry) {
     return {
-        input: {
-            [name]: entry
-        },
+        input: entry,
         plugins: [
-            resolve({extensions}),
+            nodeResolve({extensions}),
             babel({
                 exclude: "node_modules/**",
                 runtimeHelpers: true,
             }),
             commonjs(),
             postcss({
+                extensions: ['.css', '.less'],
                 modules: false,
+                use: [
+                    ['less', {javascriptEnabled: true}]
+                ],
                 extract: 'style/index.css',
             }),
             styles(),
@@ -37,25 +38,45 @@ function createInput(name, entry) {
 }
 
 const inputList = [
-    createInput('index', './src/index.js'),
-    createInput('button', './src/button/index.js'),
-    createInput('link', './src/link/index.js'),
+    createInput('./src/index.js'),
+    createInput('./src/button/index.js'),
+    createInput('./src/link/index.js'),
 ]
 
 // 多出口
 const outputOptionsList = [
-    {
-        dir: 'dist',
-        format: 'cjs',
-    },
-    {
-        dir: 'dist/lib/button',
-        format: 'cjs',
-    },
-    {
-        dir: 'dist/lib/link',
-        format: 'cjs',
-    }
+    [
+        {
+            dir: 'lib',
+            format: 'cjs',
+        },
+        {
+            dir: 'es',
+            format: 'es',
+        }
+    ],
+    [
+        {
+            dir: 'lib/button',
+            format: 'cjs',
+        },
+        {
+            dir: 'es/button',
+            format: 'es',
+            name: 'index',
+        }
+    ],
+    [
+        {
+            dir: 'lib/link',
+            format: 'cjs',
+        },
+        {
+            dir: 'es/link',
+            format: 'es',
+        }
+    ]
+    
 ];
 
 async function build(inputOptions, outputOptions) {
@@ -63,7 +84,9 @@ async function build(inputOptions, outputOptions) {
     let buildFailed = false;
     try {
         bundle = await rollup(inputOptions);
-        await bundle.write(outputOptions);
+        outputOptions.forEach(async item => {
+            await bundle.write(item);
+        });
     } catch(err) {
         buildFailed = true;
         console.error(err);

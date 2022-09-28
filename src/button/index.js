@@ -1,10 +1,15 @@
 import React from 'react'
 import './index.less';
+import { Button, Tag }  from 'antd';
 
-const Button = props => {
+const MyButton = props => {
     return (
-        <div className="button">this is a button</div>
+        <>
+            <Button>this is a button</Button>
+            <Tag>tag</Tag>
+        </>
+        
     )
 }
 
-export default Button
+export default MyButton
