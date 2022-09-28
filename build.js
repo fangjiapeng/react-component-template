@@ -59,17 +59,18 @@ const outputOptionsList = [
         {
             dir: 'lib/button',
             format: 'cjs',
+            exports: 'auto',
         },
         {
             dir: 'es/button',
             format: 'es',
-            name: 'index',
         }
     ],
     [
         {
             dir: 'lib/link',
             format: 'cjs',
+            exports: 'auto',
         },
         {
             dir: 'es/link',
@@ -84,9 +85,9 @@ async function build(inputOptions, outputOptions) {
     let buildFailed = false;
     try {
         bundle = await rollup(inputOptions);
-        outputOptions.forEach(async item => {
-            await bundle.write(item);
-        });
+        for(let i = 0; i<outputOptions.length; i++) {
+            await bundle.write(outputOptions[i]);
+        }
     } catch(err) {
         buildFailed = true;
         console.error(err);
